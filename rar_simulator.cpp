@@ -209,7 +209,7 @@ int main(int argc, char* argv[])
         io_trace = get_io_trace(smcd_id, fp, io_trace);
         if (NULL == io_trace) break;
         
-        ////开始
+        //开始
         //if (io_trace->alloc_time < cfg->io_trace_start_time) {
         //    continue;
         //}
