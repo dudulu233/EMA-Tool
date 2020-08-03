@@ -222,16 +222,17 @@ int main(int argc, char* argv[])
             //LogWrite(1, "smcd_id=%d; count=%d*5*10^7! ;\n", smcd_id, total_trace_cnt / 50000000);
         }
 
-        //TODO: hash(A) mod P < T, sampling rate = T / P * 100%
-        int threshold_value = 100; //sampling rate = 0.01
+        //hash(A) mod P < T, sampling rate = T / P * 100%
+        //e.g. P=100, T=1,so the sampling rate = 0.01
         string str_cache_addr = to_string(static_cast<long long>(io_trace->cache_addr));
         uint32_t hash = murmurhash(str_cache_addr.c_str(), (str_cache_addr).length(), 0);
         
-        if (hash % threshold_value < 1) {
+        if (hash % cfg->sampling_P < cfg->sampling_T) {
             //sc->main_operation(io_trace, get_reuse_dis, threshold_value);
         }
 
-        //结束
+        //TODO: 重用距离计算，利用cache_size、P、T
+        //finish
         if (io_trace->alloc_time >= cfg->io_trace_end_time) {
             sc->main_operation(io_trace, get_reuse_dis, threshold_value);
             break;
