@@ -1,0 +1,7 @@
+PROJ_INC=-I./
+
+PROJ_LIB =
+
+
+PROJ_OBJ=rar_simulator.o \
+		 cache_stat.o \
