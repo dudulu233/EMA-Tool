@@ -50,7 +50,7 @@ public :
 	//StatCache();
 	StatCache(long st, int smcd_id);
 	~StatCache();
-	void main_operation(IoRecord* ir, bool get_reuse_dis, int sample);
+	void main_operation(IoRecord* ir, bool get_reuse_dis, int cache_size, int sp, int st);
 	void plot_rar_curve(struct SeqNum* sn_tmp);
 	void output_reuse_distance(int smcd_id);
 	uint64_t get_map_size();

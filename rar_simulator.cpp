@@ -228,19 +228,19 @@ int main(int argc, char* argv[])
         uint32_t hash = murmurhash(str_cache_addr.c_str(), (str_cache_addr).length(), 0);
         
         if (hash % cfg->sampling_P < cfg->sampling_T) {
-            //sc->main_operation(io_trace, get_reuse_dis, threshold_value);
+            sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
         }
 
         //TODO: 重用距离计算，利用cache_size、P、T
         //finish
         if (io_trace->alloc_time >= cfg->io_trace_end_time) {
-            sc->main_operation(io_trace, get_reuse_dis, threshold_value);
+            sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
             break;
         }
 
         break;
     }
-    //sc->output_reuse_distance(smcd_id);
+    sc->output_reuse_distance(smcd_id);
     cout << "process end!~~~~" << endl;
     cout << "map_size = " << sc->get_map_size() << endl;
 

@@ -33,7 +33,7 @@ StatCache::~StatCache()
 	
 }
 
-void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis, int sample)
+void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis,int cache_size, int sp,int st)
 {
 	struct SeqNum *sn_new = NULL;
 	struct SeqNum *sn_old = NULL;
@@ -137,7 +137,7 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis, int sample)
 		double re_ratio = get_reuse_curve(x, ir->alloc_time);
 		double reuse_tmp = (total_seq - bs->last_total_seq) *
 								(1 - re_ratio);
-		reuse_dis = (int)( reuse_tmp * sample * 32 / 1024/ 1024 );
+		reuse_dis = (int)(reuse_tmp * sp * cache_size / st / 1024 / 1024);
 		if(reuse_dis >= 1024)
 		{
 			FILE *fp = fopen("big_reuse.txt","w");
