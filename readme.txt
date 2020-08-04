@@ -1,2 +1,8 @@
 # RAR simulator
-# version 0.52 ÄÚ²â°æ
+
+usage:
+$ ./rar_simulator config_file
+
+
+# close beta
+# version 0.52 
