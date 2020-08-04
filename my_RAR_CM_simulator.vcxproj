@@ -22,7 +22,7 @@
     <None Include="makefile" />
     <None Include="proj.incl" />
     <None Include="rar.conf" />
-    <None Include="readme" />
+    <None Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache_stat.cpp" />
