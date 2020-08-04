@@ -15,7 +15,7 @@
 struct SeqNum
 {
 	/*y = alog(x) + b*/
-	double* a; 
+	double* a;
 	double* b;
 	double* re_retio;
 	long start_time;
@@ -40,13 +40,13 @@ private:
 	long start_time;
 	long reuse_dis_array[1024];
 	unordered_map<uint64_t, struct BlockStat*> stat_map;
-	unordered_map<long, struct SeqNum *> seq_map;
+	unordered_map<long, struct SeqNum*> seq_map;
 	double a;
 	double b;
 	int smcd_id;
 	double para[40][4];
 
-public :
+public:
 	//StatCache();
 	StatCache(long st, int smcd_id);
 	~StatCache();

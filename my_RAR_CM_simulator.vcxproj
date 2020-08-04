@@ -34,9 +34,6 @@
     <ClInclude Include="io_record.h" />
     <ClInclude Include="log.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="rar_curve.txt" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{5799CCCA-FA96-46AE-8728-EA9033A8EDD6}</ProjectGuid>
