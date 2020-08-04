@@ -13,18 +13,6 @@ StatCache::StatCache(long st, int smcd)
 	{
 		reuse_dis_array[i] = 0l;
 	}
-
-	//default
-	/*para[0][0] = 0.027475843568899108; para[0][1] = 0.6420718335758969; para[0][2] = 0.010670436226304114; para[0][3] = 0.8300305910604904;
-	para[1][0] = 0.03539685061900993; para[1][1] = 0.5270405067223953; para[1][2] = 0.024744366959090963; para[1][3] = 0.6461823729102157;
-	para[2][0] = 0.035163017274833445; para[2][1] = 0.5439918616415994; para[2][2] = 0.020763273389141516; para[2][3] = 0.7050446652824242;
-	para[3][0] = 0.03357959865204152; para[3][1] = 0.538524331091105; para[3][2] = 0.029294979172445085; para[3][3] = 0.5864453208809799;
-	para[4][0] = 0.04318859953152237; para[4][1] = 0.453143859714916; para[4][2] = 0.012783031286299693; para[4][3] = 0.793212547815077;
-	para[5][0] = 0.02740686603738314; para[5][1] = 0.6477317821060005; para[5][2] = 0.017113619430681466; para[5][3] = 0.762855789708865;
-	para[6][0] = 0.030764120316634388; para[6][1] = 0.600905264528081; para[6][2] = 0.015506761120061866; para[6][3] = 0.7715499992031676;
-	para[7][0] = 0.04824826799533361; para[7][1] = 0.3881237939494582; para[7][2] = 0.018916208213433552; para[7][3] = 0.7161859110215023;
-	para[8][0] = 0.04724782194292421; para[8][1] = 0.4062625318831218; para[8][2] = 0.020012337395797893; para[8][3] = 0.7108756680368485;
-	para[9][0] = 0.047167812675696266; para[9][1] = 0.4095530978443018; para[9][2] = 0.020139031709896348; para[9][3] = 0.7118543740399996;*/
 	
 }
 
@@ -40,7 +28,6 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis,int cache_size, 
 	if(is_new_day(ir))
 
 	{
-		cout << "new day!~" <<current_day<< endl;
 		//_time_analysis.set_start_time();
 
 		sn_new = (struct SeqNum *)malloc(sizeof(struct SeqNum));
@@ -80,7 +67,6 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis,int cache_size, 
 	}
 	assert(sn_new);
 
-	//采样,1，20，47小时的时候
 	if (is_new_hour(ir)) {
 		if (current_hour - get_time_hour(sn_new->start_time) == 1) {
 			assert(total_seq - sn_new->start_total_seq != 0);
@@ -101,9 +87,7 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis,int cache_size, 
 
 	//_time_analysis.set_start_time();
 	
-	//缓存引用总量
 	total_seq++;
-
 
 	auto it = stat_map.find(ir->cache_addr);
 	struct BlockStat *bs;
@@ -113,7 +97,6 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis,int cache_size, 
 	//_time_analysis.add_time("avg_process_time2");
 	//_time_analysis.set_start_time();
 
-	//根据cache地址索引
 	if(it == stat_map.end())
 	{
 		bs = (struct BlockStat *)malloc(sizeof(struct BlockStat));
@@ -160,10 +143,9 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis,int cache_size, 
 
 }
 
-//获取rar曲线
 void StatCache::plot_rar_curve(struct SeqNum* sn_tmp)
 {
-	//y = alog(t) + b
+	//y = a*log(t) + b
 	//x = log(t)
 	//a = (y1-y2)/(x1-x2)
 	//b = (x1*y2-x2*y1)/(x1-x2)
@@ -178,12 +160,6 @@ void StatCache::plot_rar_curve(struct SeqNum* sn_tmp)
 	sn_tmp->b[0] = (x1*y2 - x2*y1) / (x1 - x2);
 	sn_tmp->b[1] = (x3*y2 - x2*y3) / (x3 - x2);
 
-	cout << "time:" << get_time_day(sn_tmp->start_time) <<
-		",a[0]=" << sn_tmp->a[0] <<
-		",b[0]=" << sn_tmp->b[0] <<
-		",a[1]=" << sn_tmp->a[1] <<
-		",b[1]=" << sn_tmp->b[1] << endl;
-	cout << "re_ratio=" << sn_tmp->re_retio[0] << "," << sn_tmp->re_retio[1] << "," << sn_tmp->re_retio[2] << endl;
 }
 
 void StatCache::output_reuse_distance(int smcd_id)
@@ -255,7 +231,7 @@ double StatCache::get_reuse_curve(long time_span, long timestamp)
 {
 	/*
  	get reuse distance
- 	y = alog(x) + b
+ 	y = a*log(x) + b
 	reusedistance = total_block_cnt * (1 - re_access_ratio)
 	*/
 	double result = 0;
@@ -265,7 +241,6 @@ double StatCache::get_reuse_curve(long time_span, long timestamp)
 	}
 	else
 	{
-	//根据获取的
 		SeqNum* sn_tmp = seq_map[get_time_day(timestamp) - 2];
 		if (time_span <= 72000)
 		{
@@ -276,18 +251,6 @@ double StatCache::get_reuse_curve(long time_span, long timestamp)
 			result = sn_tmp->a[1] * log(time_span) + sn_tmp->b[1];
 		}
 	}
-	//else
-	//{
-	////根据预定的
-	//	if(time_span <= 72000)
-	//	{
-	//		result = para[smcd_id][0] * log(time_span) + para[smcd_id][1];
-	//	}
-	//	else
-	//	{
-	//		result = para[smcd_id][2] * log(time_span) + para[smcd_id][3];
-	//	}
-	//}
 
 	return result < 0.99 ? result : 0.99;
 }

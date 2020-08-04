@@ -59,14 +59,6 @@ cfg_rar* get_cfg(const char* cfg_path, cfg_rar* cfg) {
     cfg->re_dis_start_time = StringToDatetime(value[5].c_str());
     cfg->io_trace_end_time = StringToDatetime(value[6].c_str());
 
-    cout << cfg->cache_file << "\n"
-        << cfg->cache_size << "\n"
-        << cfg->io_trace_end_time << "\n"
-        << cfg->io_trace_start_time << "\n"
-        << cfg->re_dis_start_time << "\n"
-        << cfg->sampling_P << "\n"
-        << cfg->sampling_T << "\n" << endl;
-
     return cfg;
 }
 
@@ -209,13 +201,15 @@ int main(int argc, char* argv[])
         io_trace = get_io_trace(smcd_id, fp, io_trace);
         if (NULL == io_trace) break;
         
-        //开始
-        //if (io_trace->alloc_time < cfg->io_trace_start_time) {
-        //    continue;
-        //}
+        //program begin
+        if (io_trace->alloc_time < cfg->io_trace_start_time) {
+            continue;
+        }
+        //begin to get the reuse distance
         if (io_trace->alloc_time >= cfg->re_dis_start_time) {
             get_reuse_dis = true;
         }
+
         total_trace_cnt++;
         if (total_trace_cnt % 100000000 == 0) {
             cout << "count=" << total_trace_cnt / 100000000 << "*10^8!" << endl;
@@ -231,15 +225,14 @@ int main(int argc, char* argv[])
             sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
         }
 
-        //TODO: 重用距离计算，利用cache_size、P、T
         //finish
         if (io_trace->alloc_time >= cfg->io_trace_end_time) {
             sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
             break;
         }
 
-        break;
     }
+
     sc->output_reuse_distance(smcd_id);
     cout << "process end!~~~~" << endl;
     cout << "map_size = " << sc->get_map_size() << endl;
