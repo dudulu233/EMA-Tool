@@ -171,13 +171,13 @@ int main(int argc, char* argv[])
 	//«Âø’»’÷æ
 	//LogClear();
 
-	//_time_analysis.set_end_time();
-	//_time_analysis.add_time("simulator init time");
+	_time_analysis.set_start_time();
+
 	cfg_rar* cfg = new cfg_rar();
 	string conf_file_name(argv[1]);
 	get_cfg(conf_file_name.c_str(), cfg);
 	if (NULL == cfg) {
-		cout << "error~!!cfg read fail!!!~~!!" << endl;
+		std::cout << "error~!!cfg read fail!!!~~!!" << endl;
 		exit(-1);
 	}
 
@@ -190,11 +190,15 @@ int main(int argc, char* argv[])
 
 	string filename = cfg->cache_file;
 	filename.append(to_string(static_cast<long long>(smcd_id)));
-	cout << "filename=" << filename << endl;
+	std::cout << "filename=" << filename << endl;
 	//LogWrite(1, "filename = /cbs_trace1/atc_2020_trace/orignial/%d\n", smcd_id);
 
 	//FILE* fp = fopen(cfg->cache_file.c_str(), "r");
 	FILE* fp = fopen(filename.c_str(), "r");
+
+	_time_analysis.set_end_time();
+	_time_analysis.add_time("simulator init time");
+
 	while (1) {
 		assert(NULL != fp);
 
@@ -212,7 +216,7 @@ int main(int argc, char* argv[])
 
 		total_trace_cnt++;
 		if (total_trace_cnt % 100000000 == 0) {
-			cout << "count=" << total_trace_cnt / 100000000 << "*10^8!" << endl;
+			std::cout << "count=" << total_trace_cnt / 100000000 << "*10^8!" << endl;
 			//LogWrite(1, "smcd_id=%d; count=%d*5*10^7! ;\n", smcd_id, total_trace_cnt / 50000000);
 		}
 
@@ -234,8 +238,8 @@ int main(int argc, char* argv[])
 	}
 
 	sc->output_reuse_distance(smcd_id);
-	cout << "process end!~~~~" << endl;
-	cout << "map_size = " << sc->get_map_size() << endl;
+	std::cout << "process end!~~~~" << endl;
+	std::cout << "map_size = " << sc->get_map_size() << endl;
 
 	delete io_trace;
 	io_trace = NULL;
