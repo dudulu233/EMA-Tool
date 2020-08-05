@@ -5,4 +5,4 @@ $ ./rar_simulator config_file
 
 
 # close beta
-# version 0.61 
+# version 0.72

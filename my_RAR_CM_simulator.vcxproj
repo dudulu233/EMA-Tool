@@ -27,12 +27,14 @@
   <ItemGroup>
     <ClCompile Include="cache_stat.cpp" />
     <ClCompile Include="rar_simulator.cpp" />
+    <ClCompile Include="time_analysis_tool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cache_stat.h" />
     <ClInclude Include="common_types.h" />
     <ClInclude Include="io_record.h" />
     <ClInclude Include="log.h" />
+    <ClInclude Include="time_analysis_tool.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
