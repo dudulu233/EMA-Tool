@@ -6,6 +6,7 @@
 //#include "log.h"
 #include "cache_stat.h"
 #include "config_rar.h"
+//#include "time_analysis_tool.h"
 
 time_t StringToDatetime(const char* str)
 {
@@ -64,28 +65,16 @@ cfg_rar* get_cfg(const char* cfg_path, cfg_rar* cfg) {
 
 IoRecord* get_io_trace(int smcd_id, FILE* fp, IoRecord* io_record) {
 
-	uint64_t io_time, cache_addr;
 	if (io_record == NULL)
 		return NULL;
 
 	int ret = fscanf(fp, "%lu,%lu",
-		&io_time,
-		&cache_addr
+		&io_record->alloc_time,
+		&io_record->cache_addr
 	);
 
-	if (0 == ret)
-	{
-		printf("err:%d, exit\n", errno);
+	if (EOF == ret) {
 		return NULL;
-	}
-	else if (EOF == ret) {
-		//printf("file over");
-		return NULL;
-	}
-	else
-	{
-		io_record->alloc_time = io_time;
-		io_record->cache_addr = cache_addr;
 	}
 
 	return io_record;
@@ -202,7 +191,13 @@ int main(int argc, char* argv[])
 	while (1) {
 		assert(NULL != fp);
 
+		_time_analysis.set_start_time();
+	
 		io_trace = get_io_trace(smcd_id, fp, io_trace);
+
+		_time_analysis.set_end_time();
+		_time_analysis.add_time("read trace");
+
 		if (NULL == io_trace) break;
 
 		//program begin
@@ -225,6 +220,8 @@ int main(int argc, char* argv[])
 		string str_cache_addr = to_string(static_cast<long long>(io_trace->cache_addr));
 		uint32_t hash = murmurhash(str_cache_addr.c_str(), (str_cache_addr).length(), 0);
 
+		_time_analysis.set_start_time();
+
 		if (hash % cfg->sampling_P < cfg->sampling_T) {
 			sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
 		}
@@ -235,9 +232,18 @@ int main(int argc, char* argv[])
 			break;
 		}
 
+		_time_analysis.set_end_time();
+		_time_analysis.add_time("process trace");
+
 	}
 
+	_time_analysis.set_start_time();
 	sc->output_reuse_distance(smcd_id);
+	_time_analysis.set_end_time();
+	_time_analysis.add_time("output time");
+
+	_time_analysis.print_all_latency();
+
 	std::cout << "process end!~~~~" << endl;
 	std::cout << "map_size = " << sc->get_map_size() << endl;
 

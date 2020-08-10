@@ -41,6 +41,7 @@
     <ProjectGuid>{5799CCCA-FA96-46AE-8728-EA9033A8EDD6}</ProjectGuid>
     <RootNamespace>myRARCMsimulator</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>RAR_CM_simulator</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
