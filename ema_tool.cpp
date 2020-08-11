@@ -6,7 +6,6 @@
 //#include "log.h"
 #include "cache_stat.h"
 #include "config_rar.h"
-//#include "time_analysis_tool.h"
 
 time_t StringToDatetime(const char* str)
 {
@@ -25,7 +24,7 @@ time_t StringToDatetime(const char* str)
 	return t_;
 }
 
-cfg_rar* get_cfg(const char* cfg_path, cfg_rar* cfg) {
+void get_cfg(const char* cfg_path, cfg_rar* cfg) {
 
 	string key[7] = { "cache_file","cache_size","sampling_P","sampling_T","io_trace_start_time","re_dis_start_time","io_trace_end_time" };
 	string value[7] = { "" };
@@ -33,22 +32,25 @@ cfg_rar* get_cfg(const char* cfg_path, cfg_rar* cfg) {
 	fstream cfg_file;
 	cfg_file.open(cfg_path);
 	if (!cfg_file.is_open()) {
-		return NULL;
+		exit(-1);
 	}
-	while (!cfg_file.eof())
+	while (index < 7)
 	{
-		char tmp[256];
-		cfg_file.getline(tmp, 256);//256 probably enough
+		char tmp[128];
+		cfg_file.getline(tmp, 128);//128 probably enough
 		string line(tmp);
+
 		size_t pos = line.find('=');//find the location of "=",get the key and value
-		if (pos == string::npos) return NULL;
+		if (pos == string::npos) exit(-1);
+
 		string tmpKey = line.substr(0, pos);//get key
 		if (key[index] != tmpKey)
 		{
-			return NULL;
+			exit(-1);
 		}
 		value[index] = line.substr(pos + 1);//get value
 		++index;
+
 	}
 	cfg_file.close();
 
@@ -60,7 +62,7 @@ cfg_rar* get_cfg(const char* cfg_path, cfg_rar* cfg) {
 	cfg->re_dis_start_time = StringToDatetime(value[5].c_str());
 	cfg->io_trace_end_time = StringToDatetime(value[6].c_str());
 
-	return cfg;
+
 }
 
 //designed by MIT
@@ -166,25 +168,24 @@ int main(int argc, char* argv[])
 	//LogWrite(1, "filename = /cbs_trace1/atc_2020_trace/orignial/%d\n", smcd_id);
 
 	//FILE* fp = fopen(cfg->cache_file.c_str(), "r");
+
 	FILE* fp = fopen(filename.c_str(), "r");
 
 	_time_analysis.set_end_time();
-	_time_analysis.add_time("simulator init time");
+	_time_analysis.add_time("ema init time");
 
-	char input[20];
+
+	_time_analysis.set_start_time();
 	while (1) {
 		assert(NULL != fp);
 		assert(NULL != io_trace);
 
-		_time_analysis.set_start_time();
 
 		if(fscanf(fp, "%lu,%lu",
 			&io_trace->alloc_time,
 			&io_trace->cache_addr
 		) == EOF) break;
 
-		_time_analysis.set_end_time();
-		_time_analysis.add_time("read trace");
 
 		//program begin
 		if (io_trace->alloc_time < cfg->io_trace_start_time) {
@@ -203,25 +204,23 @@ int main(int argc, char* argv[])
 
 		//hash(A) mod P < T, sampling rate = T / P * 100%
 		//e.g. P=100, T=1,so the sampling rate = 0.01
-		//string str_cache_addr = to_string(static_cast<long long>(io_trace->cache_addr));
-		//uint32_t hash = murmurhash(str_cache_addr.c_str(), (str_cache_addr).length(), 0);
+		string str_cache_addr = to_string(static_cast<long long>(io_trace->cache_addr));
+		uint32_t hash = murmurhash(str_cache_addr.c_str(), (str_cache_addr).length(), 0);
 
-		_time_analysis.set_start_time();
 
-		//if (hash % cfg->sampling_P < cfg->sampling_T) {
+		if (hash % cfg->sampling_P < cfg->sampling_T) {
 			sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
-		//}
+		}
 
 		//finish
 		if (io_trace->alloc_time >= cfg->io_trace_end_time) {
-			//sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
+			sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
 			break;
 		}
 
-		_time_analysis.set_end_time();
-		_time_analysis.add_time("process trace");
-
 	}
+	_time_analysis.set_end_time();
+	_time_analysis.add_time("process trace");
 
 	_time_analysis.set_start_time();
 	sc->output_reuse_distance(smcd_id);

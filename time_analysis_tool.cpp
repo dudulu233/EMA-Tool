@@ -66,11 +66,11 @@ double TimeAnalysis::get_latency(string key)
 void TimeAnalysis::print_all_latency()
 {
 	char shell_str[256];
-	strcpy(shell_str, "mkdir -p ./simulator_result");
+	strcpy(shell_str, "mkdir -p ./result");
 	int ret = system(shell_str);
 	assert(0 == ret);
 
-	FILE* fp = fopen("./ta_time_analysis.log", "w");
+	FILE* fp = fopen("./result/time_analysis.log", "w");
 	double total_time = 0;
 	for (auto it = time_map.begin();
 		it != time_map.end();

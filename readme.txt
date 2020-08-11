@@ -1,8 +1,7 @@
 # RAR simulator
 
 usage:
-$ ./rar_simulator config_file
-
+$ ./ema_tool ema.conf
 
 # close beta
-# version 0.88
+# version 0.90
