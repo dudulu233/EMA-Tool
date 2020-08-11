@@ -163,7 +163,7 @@ void StatCache::plot_rar_curve(struct SeqNum* sn_tmp)
 
 void StatCache::output_reuse_distance(int smcd_id)
 {
-	string filepath = "./simulator_result/smcd" + to_string(static_cast<long long>(smcd_id));
+	string filepath = "./result/smcd" + to_string(static_cast<long long>(smcd_id));
 	string shell_str = "mkdir -p " + filepath;
 	int ret = system(shell_str.c_str());
 	assert(0 == ret);

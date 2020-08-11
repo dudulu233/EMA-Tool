@@ -39,7 +39,7 @@ private:
 	long current_day;
 	long start_time;
 	long reuse_dis_array[1024];
-	unordered_map<uint64_t, struct BlockStat*> stat_map;
+	unordered_map<uint64, struct BlockStat*> stat_map;
 	unordered_map<long, struct SeqNum*> seq_map;
 	double a;
 	double b;

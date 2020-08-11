@@ -3,6 +3,6 @@ PROJ_INC=-I./
 PROJ_LIB =
 
 
-PROJ_OBJ = rar_simulator.o \
+PROJ_OBJ = ema_tool.o \
 		cache_stat.o \
 		time_analysis_tool.o \

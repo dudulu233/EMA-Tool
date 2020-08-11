@@ -63,23 +63,6 @@ cfg_rar* get_cfg(const char* cfg_path, cfg_rar* cfg) {
 	return cfg;
 }
 
-IoRecord* get_io_trace(int smcd_id, FILE* fp, IoRecord* io_record) {
-
-	if (io_record == NULL)
-		return NULL;
-
-	int ret = fscanf(fp, "%lu,%lu",
-		&io_record->alloc_time,
-		&io_record->cache_addr
-	);
-
-	if (EOF == ret) {
-		return NULL;
-	}
-
-	return io_record;
-}
-
 //designed by MIT
 uint32_t murmurhash(const char* key, uint32_t len, uint32_t seed) {
 	uint32_t c1 = 0xcc9e2d51;
@@ -147,7 +130,7 @@ int main(int argc, char* argv[])
 {
 	if (3 != argc)
 	{
-		printf("Usage: ./rar_simulator config_file_name\n");
+		printf("Usage: ./ema_tool config_file_name\n");
 		exit(-1);
 	}
 
@@ -188,17 +171,20 @@ int main(int argc, char* argv[])
 	_time_analysis.set_end_time();
 	_time_analysis.add_time("simulator init time");
 
+	char input[20];
 	while (1) {
 		assert(NULL != fp);
+		assert(NULL != io_trace);
 
 		_time_analysis.set_start_time();
-	
-		io_trace = get_io_trace(smcd_id, fp, io_trace);
+
+		if(fscanf(fp, "%lu,%lu",
+			&io_trace->alloc_time,
+			&io_trace->cache_addr
+		) == EOF) break;
 
 		_time_analysis.set_end_time();
 		_time_analysis.add_time("read trace");
-
-		if (NULL == io_trace) break;
 
 		//program begin
 		if (io_trace->alloc_time < cfg->io_trace_start_time) {
@@ -209,26 +195,26 @@ int main(int argc, char* argv[])
 			get_reuse_dis = true;
 		}
 
-		total_trace_cnt++;
-		if (total_trace_cnt % 100000000 == 0) {
-			std::cout << "count=" << total_trace_cnt / 100000000 << "*10^8!" << endl;
-			//LogWrite(1, "smcd_id=%d; count=%d*5*10^7! ;\n", smcd_id, total_trace_cnt / 50000000);
-		}
+		//total_trace_cnt++;
+		//if (total_trace_cnt % 100000000 == 0) {
+		//	std::cout << "count=" << total_trace_cnt / 100000000 << "*10^8!" << endl;
+		//	//LogWrite(1, "smcd_id=%d; count=%d*5*10^7! ;\n", smcd_id, total_trace_cnt / 50000000);
+		//}
 
 		//hash(A) mod P < T, sampling rate = T / P * 100%
 		//e.g. P=100, T=1,so the sampling rate = 0.01
-		string str_cache_addr = to_string(static_cast<long long>(io_trace->cache_addr));
-		uint32_t hash = murmurhash(str_cache_addr.c_str(), (str_cache_addr).length(), 0);
+		//string str_cache_addr = to_string(static_cast<long long>(io_trace->cache_addr));
+		//uint32_t hash = murmurhash(str_cache_addr.c_str(), (str_cache_addr).length(), 0);
 
 		_time_analysis.set_start_time();
 
-		if (hash % cfg->sampling_P < cfg->sampling_T) {
+		//if (hash % cfg->sampling_P < cfg->sampling_T) {
 			sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
-		}
+		//}
 
 		//finish
 		if (io_trace->alloc_time >= cfg->io_trace_end_time) {
-			sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
+			//sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
 			break;
 		}
 
@@ -245,7 +231,7 @@ int main(int argc, char* argv[])
 	_time_analysis.print_all_latency();
 
 	std::cout << "process end!~~~~" << endl;
-	std::cout << "map_size = " << sc->get_map_size() << endl;
+	//std::cout << "map_size = " << sc->get_map_size() << endl;
 
 	delete io_trace;
 	io_trace = NULL;

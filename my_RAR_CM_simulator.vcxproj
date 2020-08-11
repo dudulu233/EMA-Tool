@@ -21,12 +21,12 @@
   <ItemGroup>
     <None Include="makefile" />
     <None Include="proj.incl" />
-    <None Include="rar.conf" />
+    <None Include="ema.conf" />
     <None Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache_stat.cpp" />
-    <ClCompile Include="rar_simulator.cpp" />
+    <ClCompile Include="ema_tool.cpp" />
     <ClCompile Include="time_analysis_tool.cpp" />
   </ItemGroup>
   <ItemGroup>

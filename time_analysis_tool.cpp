@@ -70,7 +70,7 @@ void TimeAnalysis::print_all_latency()
 	int ret = system(shell_str);
 	assert(0 == ret);
 
-	FILE* fp = fopen("./simulator_result/time_analysis.log", "w");
+	FILE* fp = fopen("./ta_time_analysis.log", "w");
 	double total_time = 0;
 	for (auto it = time_map.begin();
 		it != time_map.end();

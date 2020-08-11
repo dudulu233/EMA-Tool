@@ -5,7 +5,7 @@ CFLAGS+= -fPIC -DSNACC_DEEP_COPY -DHAVE_VARIABLE_SIZED_AUTOMATIC_ARRAYS -Wno-dep
 INC+=  $(PROJ_INC)
 OBJ+=$(PROJ_OBJ)
 
-BIN=rar_simulator
+BIN=ema_tool
 LIB+=$(PROJ_LIB)
 
 $(BIN): $(OBJ)

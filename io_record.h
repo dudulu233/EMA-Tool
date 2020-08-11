@@ -14,8 +14,8 @@ uint64_t cache_addr;
 */
 typedef struct _IoRecord
 {
-	uint64_t alloc_time;
-	uint64_t cache_addr;
+	uint64 alloc_time;
+	uint64 cache_addr;
 
 } IoRecord;
 

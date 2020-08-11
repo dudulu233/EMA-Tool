@@ -17,17 +17,17 @@
   <ItemGroup>
     <None Include="makefile" />
     <None Include="proj.incl" />
-    <None Include="rar.conf" />
     <None Include="readme.txt" />
+    <None Include="ema.conf" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="rar_simulator.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="cache_stat.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="time_analysis_tool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ema_tool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
