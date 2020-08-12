@@ -1,7 +1,6 @@
-# RAR simulator
+# EMA-Tool
 
 usage:
 $ ./ema_tool ema.conf
 
-# close beta
-# version 0.90
+# open beta version 1.00

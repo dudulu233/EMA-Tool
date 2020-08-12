@@ -3,9 +3,10 @@
 
 #include "common_types.h"
 #include "io_record.h"
-//#include "log.h"
 #include "cache_stat.h"
 #include "config_rar.h"
+#include "log.h"
+
 
 time_t StringToDatetime(const char* str)
 {
@@ -32,6 +33,7 @@ void get_cfg(const char* cfg_path, cfg_rar* cfg) {
 	fstream cfg_file;
 	cfg_file.open(cfg_path);
 	if (!cfg_file.is_open()) {
+		printf("error! config file open fail!\n");
 		exit(-1);
 	}
 	while (index < 7)
@@ -41,11 +43,15 @@ void get_cfg(const char* cfg_path, cfg_rar* cfg) {
 		string line(tmp);
 
 		size_t pos = line.find('=');//find the location of "=",get the key and value
-		if (pos == string::npos) exit(-1);
+		if (pos == string::npos) {
+			printf("error! config format incorrect!\n");
+			exit(-1);
+		}
 
 		string tmpKey = line.substr(0, pos);//get key
 		if (key[index] != tmpKey)
 		{
+			printf("error! config key incorrect!\n");
 			exit(-1);
 		}
 		value[index] = line.substr(pos + 1);//get value
@@ -61,7 +67,6 @@ void get_cfg(const char* cfg_path, cfg_rar* cfg) {
 	cfg->io_trace_start_time = StringToDatetime(value[4].c_str());
 	cfg->re_dis_start_time = StringToDatetime(value[5].c_str());
 	cfg->io_trace_end_time = StringToDatetime(value[6].c_str());
-
 
 }
 
@@ -130,7 +135,7 @@ uint32_t murmurhash(const char* key, uint32_t len, uint32_t seed) {
 
 int main(int argc, char* argv[])
 {
-	if (3 != argc)
+	if (2 != argc)
 	{
 		printf("Usage: ./ema_tool config_file_name\n");
 		exit(-1);
@@ -142,52 +147,42 @@ int main(int argc, char* argv[])
 		exit(-1);
 	}
 
-	//清空日志
-	//LogClear();
-
 	_time_analysis.set_start_time();
+
+	bool get_reuse_dis = false;
+	uint64 total_trace_cnt = 0;
 
 	cfg_rar* cfg = new cfg_rar();
 	string conf_file_name(argv[1]);
 	get_cfg(conf_file_name.c_str(), cfg);
-	if (NULL == cfg) {
-		std::cout << "error~!!cfg read fail!!!~~!!" << endl;
-		exit(-1);
-	}
+	LogClear();
 
-	//获取smcd
-	int smcd_id = atoi(argv[2]);
-	StatCache* sc = new StatCache(cfg->io_trace_start_time, smcd_id);
+	StatCache* sc = new StatCache(cfg->io_trace_start_time);
 	IoRecord* io_trace = new IoRecord();
-	uint64_t total_trace_cnt = 0;
-	bool get_reuse_dis = false;
 
-	string filename = cfg->cache_file;
-	filename.append(to_string(static_cast<long long>(smcd_id)));
-	std::cout << "filename=" << filename << endl;
-	//LogWrite(1, "filename = /cbs_trace1/atc_2020_trace/orignial/%d\n", smcd_id);
+	LogWrite(1, "process start~");
 
-	//FILE* fp = fopen(cfg->cache_file.c_str(), "r");
-
-	FILE* fp = fopen(filename.c_str(), "r");
+	FILE* fp = fopen(cfg->cache_file.c_str(), "r");
 
 	_time_analysis.set_end_time();
 	_time_analysis.add_time("ema init time");
 
-
-	_time_analysis.set_start_time();
 	while (1) {
 		assert(NULL != fp);
 		assert(NULL != io_trace);
 
+		_time_analysis.set_start_time();
 
 		if(fscanf(fp, "%lu,%lu",
 			&io_trace->alloc_time,
 			&io_trace->cache_addr
 		) == EOF) break;
 
+		_time_analysis.set_end_time();
+		_time_analysis.add_time("read trace");
 
 		//program begin
+		_time_analysis.set_start_time();
 		if (io_trace->alloc_time < cfg->io_trace_start_time) {
 			continue;
 		}
@@ -195,12 +190,6 @@ int main(int argc, char* argv[])
 		if (io_trace->alloc_time >= cfg->re_dis_start_time) {
 			get_reuse_dis = true;
 		}
-
-		//total_trace_cnt++;
-		//if (total_trace_cnt % 100000000 == 0) {
-		//	std::cout << "count=" << total_trace_cnt / 100000000 << "*10^8!" << endl;
-		//	//LogWrite(1, "smcd_id=%d; count=%d*5*10^7! ;\n", smcd_id, total_trace_cnt / 50000000);
-		//}
 
 		//hash(A) mod P < T, sampling rate = T / P * 100%
 		//e.g. P=100, T=1,so the sampling rate = 0.01
@@ -218,19 +207,19 @@ int main(int argc, char* argv[])
 			break;
 		}
 
+		_time_analysis.set_end_time();
+		_time_analysis.add_time("process time");
 	}
-	_time_analysis.set_end_time();
-	_time_analysis.add_time("process trace");
+
 
 	_time_analysis.set_start_time();
-	sc->output_reuse_distance(smcd_id);
+	sc->output_reuse_distance();
 	_time_analysis.set_end_time();
 	_time_analysis.add_time("output time");
 
 	_time_analysis.print_all_latency();
 
 	std::cout << "process end!~~~~" << endl;
-	//std::cout << "map_size = " << sc->get_map_size() << endl;
 
 	delete io_trace;
 	io_trace = NULL;

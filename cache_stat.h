@@ -9,7 +9,6 @@
 #include <sys/stat.h>
 #include "time_analysis_tool.h"
 #include "io_record.h"
-//#include "log.h"
 
 
 struct SeqNum
@@ -41,18 +40,15 @@ private:
 	long reuse_dis_array[1024];
 	unordered_map<uint64, struct BlockStat*> stat_map;
 	unordered_map<long, struct SeqNum*> seq_map;
-	double a;
-	double b;
-	int smcd_id;
 	double para[40][4];
 
 public:
 	//StatCache();
-	StatCache(long st, int smcd_id);
+	StatCache(long st);
 	~StatCache();
 	void main_operation(IoRecord* ir, bool get_reuse_dis, int cache_size, int sp, int st);
 	void plot_rar_curve(struct SeqNum* sn_tmp);
-	void output_reuse_distance(int smcd_id);
+	void output_reuse_distance();
 	uint64_t get_map_size();
 	long get_time_hour(long timestamp);
 	long get_time_day(long timestamp);

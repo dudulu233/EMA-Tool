@@ -10,7 +10,7 @@ using namespace std;
 #ifndef LOG_PARA
 #define LOG_PARA
 FILE *log_file = NULL;
-const char *LOG_FILE = "logfile";
+const char *LOG_FILE = "./result/log";
 const char LEVEL[3][20] = {"DEBUG", "INFO", "ERROR"};
 const int CURRENT_LEVEL = 1;
 const int PRINT_INFO = 1;

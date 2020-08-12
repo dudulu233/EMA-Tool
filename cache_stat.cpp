@@ -4,15 +4,19 @@
 #include <iostream>
 #include <stdio.h>
 
-StatCache::StatCache(long st, int smcd)
+StatCache::StatCache(long st)
 {
 	total_seq = re_seq = map_size = current_hour = current_day = 0;
 	start_time = st;
-	smcd_id = smcd;
 	for (int i = 0; i < 1024; i++)
 	{
 		reuse_dis_array[i] = 0l;
 	}
+
+	string output_path = "./result";
+	string shell_str = "mkdir -p " + output_path;
+	int ret = system(shell_str.c_str());
+	assert(0 == ret);
 }
 
 StatCache::~StatCache()
@@ -27,8 +31,6 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis, int cache_size,
 	if (is_new_day(ir))
 
 	{
-		//_time_analysis.set_start_time();
-
 		sn_new = (struct SeqNum*)malloc(sizeof(struct SeqNum));
 		sn_new->start_total_seq = total_seq;
 		sn_new->re_seq = 0;
@@ -40,11 +42,9 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis, int cache_size,
 			sn_new->re_retio[0] = sn_new->re_retio[1] = sn_new->re_retio[2] = 0.0;
 
 		seq_map[current_day] = sn_new;
-		//_time_analysis.set_end_time();
-		//_time_analysis.add_time("avg_process_time1_1");
 
 		if (current_day - get_time_day(start_time) > 1) {
-			//绘制两天前的曲线
+			//plot RAR curve of 2 days ago
 			struct SeqNum* sn_tmp = seq_map[current_day - 2];
 			assert(sn_tmp);
 			plot_rar_curve(sn_tmp);
@@ -56,13 +56,8 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis, int cache_size,
 	}
 	if (current_day - get_time_day(start_time) > 0)
 	{
-		//_time_analysis.set_start_time();
-
 		sn_old = seq_map[current_day - 1];
 		assert(sn_old);
-
-		//_time_analysis.set_end_time();
-		//_time_analysis.add_time("avg_process_time1_2");
 	}
 	assert(sn_new);
 
@@ -81,20 +76,13 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis, int cache_size,
 				sn_old->re_retio[2] = (double)(sn_old->re_seq) / (total_seq - sn_old->start_total_seq);
 			}
 		}
-
 	}
-
-	//_time_analysis.set_start_time();
 
 	total_seq++;
 
 	auto it = stat_map.find(ir->cache_addr);
 	struct BlockStat* bs;
 	int reuse_dis = -1;
-
-	//_time_analysis.set_end_time();
-	//_time_analysis.add_time("avg_process_time2");
-	//_time_analysis.set_start_time();
 
 	if (it == stat_map.end())
 	{
@@ -122,7 +110,7 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis, int cache_size,
 		reuse_dis = (int)(reuse_tmp * sp * cache_size / st / 1024 / 1024);
 		if (reuse_dis >= 1024)
 		{
-			FILE* fp = fopen("big_reuse.txt", "w");
+			FILE* fp = fopen("./result/big_reuse.txt", "w");
 			fprintf(fp, "%ld\t%llu\t%lf\n", x, total_seq - bs->last_total_seq, re_ratio);
 			fclose(fp);
 			reuse_dis = 1023;
@@ -137,8 +125,6 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis, int cache_size,
 	if (get_reuse_dis) {
 		reuse_dis_array[reuse_dis]++;
 	}
-	//_time_analysis.set_end_time();
-	//_time_analysis.add_time("avg_process_time3");
 
 }
 
@@ -161,18 +147,11 @@ void StatCache::plot_rar_curve(struct SeqNum* sn_tmp)
 
 }
 
-void StatCache::output_reuse_distance(int smcd_id)
+void StatCache::output_reuse_distance()
 {
-	string filepath = "./result/smcd" + to_string(static_cast<long long>(smcd_id));
-	string shell_str = "mkdir -p " + filepath;
-	int ret = system(shell_str.c_str());
-	assert(0 == ret);
-	string filename = filepath.append("/reuse_dis.txt");
+	string filename = "./result/reuse_dis.txt";
 	FILE* fp = fopen(filename.c_str(), "w");
-	if (NULL == fp) {
-		cout << "create " << filename << " fail~!!!!~!" << endl;
-		return;
-	}
+	assert(NULL != fp);
 	for (int i = 0; i < 1024; i++) {
 		fprintf(fp, "%ld,", reuse_dis_array[i]);
 	}
