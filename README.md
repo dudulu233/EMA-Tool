@@ -6,6 +6,8 @@ $ make
 $ ./ema_tool ema.conf
 
 
+
+### author 
 designed by Dr.Yu Zhang and his assistant Siqi Luo
 
 
