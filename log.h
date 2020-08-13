@@ -32,7 +32,6 @@ const int PRINT_INFO = 1;
         fclose(log_file);                            \
     }
 #else
-#define LogWrite(level, f DMC_DEBUGs, arg...)
 #endif
 
 char *GET_MSG(int level, string s)

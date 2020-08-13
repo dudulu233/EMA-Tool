@@ -5,8 +5,7 @@
 #include "io_record.h"
 #include "cache_stat.h"
 #include "config_rar.h"
-#include "log.h"
-
+//#include "log.h"
 
 time_t StringToDatetime(const char* str)
 {
@@ -154,6 +153,7 @@ int main(int argc, char* argv[])
 
 	cfg_rar* cfg = new cfg_rar();
 	string conf_file_name(argv[1]);
+	assert(NULL != cfg);
 	get_cfg(conf_file_name.c_str(), cfg);
 	LogClear();
 
@@ -219,7 +219,7 @@ int main(int argc, char* argv[])
 
 	_time_analysis.print_all_latency();
 
-	std::cout << "process end!~~~~" << endl;
+	LogWrite(1, "process end~~");
 
 	delete io_trace;
 	io_trace = NULL;

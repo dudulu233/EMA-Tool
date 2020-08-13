@@ -22,7 +22,7 @@
     <None Include="makefile" />
     <None Include="proj.incl" />
     <None Include="ema.conf" />
-    <None Include="readme.txt" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache_stat.cpp" />

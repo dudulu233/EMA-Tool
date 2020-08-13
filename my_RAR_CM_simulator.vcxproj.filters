@@ -17,8 +17,8 @@
   <ItemGroup>
     <None Include="makefile" />
     <None Include="proj.incl" />
-    <None Include="readme.txt" />
     <None Include="ema.conf" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cache_stat.cpp">
