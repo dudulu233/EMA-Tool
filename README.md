@@ -1,7 +1,8 @@
 # EMA-Tool
 
 ## usage:
-$ make 
+$ make
+
 $ ./ema_tool ema.conf
 
 
