@@ -2,7 +2,6 @@
 
 ## usage:
 $ make 
-
 $ ./ema_tool ema.conf
 
 
