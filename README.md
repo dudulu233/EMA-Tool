@@ -16,13 +16,13 @@ e.g.
 1538409601,38224003116  
 
 ## Usage:
-0)EMA-Tool use standard Linux c++ library, make sure your compiler supports it.  
+0` EMA-Tool use standard Linux c++ library, make sure your compiler supports it.  
 
-1)download and edit the config file  
+1` download and edit the config file  
 $vim ema.conf  
 
 
-2)
+2` 
 $make  
 $./ema_tool ema.conf  
 
