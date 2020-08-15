@@ -15,8 +15,15 @@ e.g.
 1538409601,38224003116  
 
 ## Usage:
-$ make  
-$ ./ema_tool ema.conf  
+0)EMA-Tool use standard Linux c++ library, make sure your compiler supports it.  
+
+1)download and edit the config file  
+$vim ema.conf
+
+
+2)
+$make  
+$./ema_tool ema.conf  
 
 ### Author 
 designed by Dr.Yu Zhang and his assistant Siqi Luo
