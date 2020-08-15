@@ -5,7 +5,7 @@ MRC(Miss Ratio Curve) plays an important role in cache locality analysis, which 
 
 EMA-Tool based on the RAR-CM, it's full name is "Efficient MRC Acquisition Tool", which can get reuse distance histogram in O(1) time complexity and very low space complexity by hash sampling and can ensure high accuracy at the same time.  
   
-The input chache trace explanation and format is as follow:
+The input cache trace explanation and format is as follow:
 
 'time stamp', 'cache addr'  
 e.g.  
@@ -20,8 +20,8 @@ e.g.
 
 1` download and edit the config file  
 $vim ema.conf  
-
-
+  
+  
 2`   
 $make  
 $./ema_tool ema.conf    
