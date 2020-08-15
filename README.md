@@ -22,7 +22,7 @@ e.g.
 $vim ema.conf  
 
 
-2` 
+2`   
 $make  
 $./ema_tool ema.conf  
 
