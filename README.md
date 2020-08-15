@@ -19,7 +19,7 @@ e.g.
 0)EMA-Tool use standard Linux c++ library, make sure your compiler supports it.  
 
 1)download and edit the config file  
-$vim ema.conf
+$vim ema.conf  
 
 
 2)
