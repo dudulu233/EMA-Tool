@@ -7,7 +7,7 @@ EMA-Tool based on the RAR-CM, it's full name is "Efficient MRC Acquisition Tool"
   
 The input cache trace explanation and format is as follow:
 
-'time stamp', 'cache addr'  
+'time stamp'(Unix time), 'cache addr'  
 e.g.  
 1538409600,980537001121  
 1538409600,980538001121  
