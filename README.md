@@ -16,7 +16,7 @@ e.g.
 1538409601,38224003116  
 
 We also provide some custom settings in ema.conf:  
-e.g. 
+e.g.   
 cache_file=/cbs_trace1/atc_2020_trace/orignial/RAR_0  
 cache_size=32  
 sampling_P=1  
