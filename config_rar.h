@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string.h>
 
+//match the content of ema.conf
 typedef struct Config_rar {
 	string cache_file;
 	int  cache_size;    //KB
