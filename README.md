@@ -15,7 +15,10 @@ e.g.
 1538409600,38225003116  
 1538409601,38224003116  
 
-We also provide some 
+We also provide some custom settings in ema.conf:  
+e.g.  
+
+
 
 ### notice  
 Because we need to build the RAR curve, and the time granularity is set to two days, the trace needs to be longer than two days at least.  
