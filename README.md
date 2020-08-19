@@ -15,6 +15,9 @@ e.g.
 1538409600,38225003116  
 1538409601,38224003116  
 
+* notice
+at least 3 days trace
+
 ## Usage:
 0` EMA-Tool use standard Linux c++ library, make sure your compiler supports it.  
 
