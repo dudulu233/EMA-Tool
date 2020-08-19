@@ -1,11 +1,11 @@
-#ifndef _CONFIG_RAR_H
-#define _CONFIG_RAR_H
+#ifndef _CONFIG_EMA_H
+#define _CONFIG_EMA_H
 #include <string>
 #include <sstream>
 #include <string.h>
 
 //match the content of ema.conf
-typedef struct Config_rar {
+typedef struct Config_ema {
 	string cache_file;
 	int  cache_size;    //KB
 	int  sampling_P;
@@ -14,6 +14,6 @@ typedef struct Config_rar {
 	long re_dis_start_time;   //reuse distance begin to be computed
 	long io_trace_end_time;
 
-}cfg_rar;
+}cfg_ema;
 
 #endif
