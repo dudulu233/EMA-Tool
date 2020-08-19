@@ -4,7 +4,7 @@
 #include "common_types.h"
 #include "io_record.h"
 #include "cache_stat.h"
-#include "config_rar.h"
+#include "config_ema.h"
 //#include "log.h"
 
 time_t StringToDatetime(const char* str)
@@ -24,7 +24,7 @@ time_t StringToDatetime(const char* str)
 	return t_;
 }
 
-void get_cfg(const char* cfg_path, cfg_rar* cfg) {
+void get_cfg(const char* cfg_path, cfg_ema* cfg) {
 
 	string key[7] = { "cache_file","cache_size","sampling_P","sampling_T","io_trace_start_time","re_dis_start_time","io_trace_end_time" };
 	string value[7] = { "" };
@@ -151,7 +151,7 @@ int main(int argc, char* argv[])
 	bool get_reuse_dis = false;
 	uint64 total_trace_cnt = 0;
 
-	cfg_rar* cfg = new cfg_rar();
+	cfg_ema* cfg = new cfg_ema();
 	string conf_file_name(argv[1]);
 	assert(NULL != cfg);
 	get_cfg(conf_file_name.c_str(), cfg);
