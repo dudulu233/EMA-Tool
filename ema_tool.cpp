@@ -155,11 +155,11 @@ int main(int argc, char* argv[])
 	string conf_file_name(argv[1]);
 	assert(NULL != cfg);
 	get_cfg(conf_file_name.c_str(), cfg);
-	LogClear();
 
 	StatCache* sc = new StatCache(cfg->io_trace_start_time);
 	IoRecord* io_trace = new IoRecord();
-
+	LogClear();
+	
 	LogWrite(1, "process start~");
 
 	FILE* fp = fopen(cfg->cache_file.c_str(), "r");
