@@ -5,7 +5,7 @@
 #include "io_record.h"
 #include "cache_stat.h"
 #include "config_ema.h"
-//#include "log.h"
+#include "log.h"
 
 time_t StringToDatetime(const char* str)
 {
