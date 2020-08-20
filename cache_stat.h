@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 #include "time_analysis_tool.h"
 #include "io_record.h"
-#include "log.h"
+//#include "log.h"
 
 struct SeqNum
 {
@@ -18,8 +18,8 @@ struct SeqNum
 	double* b;
 	double* re_retio;
 	long start_time;
-	uint64_t start_total_seq;	//利用全局总数
-	uint64_t re_seq; //单独统计
+	uint64_t start_total_seq;	//脌没脫脙脠芦戮脰脳脺脢媒
+	uint64_t re_seq; //碌楼露脌脥鲁录脝
 };
 
 struct BlockStat
