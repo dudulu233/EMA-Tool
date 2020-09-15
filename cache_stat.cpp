@@ -110,9 +110,6 @@ void StatCache::main_operation(IoRecord* ir, bool get_reuse_dis, int cache_size,
 		reuse_dis = (int)(reuse_tmp * sp * cache_size / st / 1024 / 1024);
 		if (reuse_dis >= 1024)
 		{
-			FILE* fp = fopen("./result/big_reuse.txt", "w");
-			fprintf(fp, "%ld\t%llu\t%lf\n", x, total_seq - bs->last_total_seq, re_ratio);
-			fclose(fp);
 			reuse_dis = 1023;
 		}
 		if (reuse_dis <= 0)
