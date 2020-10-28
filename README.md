@@ -3,7 +3,8 @@ open beta version 1.00
 
 MRC(Miss Ratio Curve) plays an important role in cache locality analysis, which can be achieved by reuse distance distribution. However, obtaining the reuse distance distribution has an O(N ∗ M) complexity, where N is the total number of references in the access sequence and M is number of the unique data blocks of references. Although Recent studies have proposed various ways to decrease the computation complexity to O(N ∗ log(n)) using Search Tree, Scale Tree, Interval Tree. These methods use a balanced tree structure to get a logarithmic search time upon each reference to calculate block reuse distances. More over, SHARDS, further decreases the computation complexity with fixed amount of space. These methods still require considerable time and space overhead for processing billions of cached traces.  
 
-EMA-Tool based on the RAR-CM, it's full name is "Efficient MRC Acquisition Tool", which can get reuse distance histogram in O(1) time complexity and very low space complexity by hash sampling (hash(cache_addr) mod P < T) and can ensure high accuracy at the same time.  
+EMA-Tool based on the RAR-CM, it's full name is "Efficient MRC Acquisition Tool", which can get reuse distance histogram in O(1) time complexity and lower space complexity than SHARDS.
+by hash sampling (hash(cache_addr) mod P < T) and can ensure high accuracy at the same time.  
   
 The input cache trace explanation and format is as follow:
 
