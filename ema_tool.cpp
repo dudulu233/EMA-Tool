@@ -26,8 +26,11 @@ time_t StringToDatetime(const char* str)
 
 void get_cfg(const char* cfg_path, cfg_ema* cfg) {
 
-	string key[7] = { "cache_file","cache_size","sampling_P","sampling_T","io_trace_start_time","re_dis_start_time","io_trace_end_time" };
-	string value[7] = { "" };
+	string key[9] = { "cache_file","cache_size",
+					"sampling_P","sampling_T",
+					"io_trace_start_time","re_dis_start_time","io_trace_end_time",
+					"fixed_mem_size","unique_ratio" };
+	string value[9] = { "" };
 	int index = 0;
 	fstream cfg_file;
 	cfg_file.open(cfg_path);
@@ -35,7 +38,7 @@ void get_cfg(const char* cfg_path, cfg_ema* cfg) {
 		printf("error! config file open fail!\n");
 		exit(-1);
 	}
-	while (index < 7)
+	while (index < 9)
 	{
 		char tmp[128];
 		cfg_file.getline(tmp, 128);//128 probably enough
@@ -66,6 +69,23 @@ void get_cfg(const char* cfg_path, cfg_ema* cfg) {
 	cfg->io_trace_start_time = StringToDatetime(value[4].c_str());
 	cfg->re_dis_start_time = StringToDatetime(value[5].c_str());
 	cfg->io_trace_end_time = StringToDatetime(value[6].c_str());
+	cfg->fixed_mem_size = stoi(value[7]);
+	cfg->unique_ratio = stoi(value[8]);
+	
+	uint64 trace_line = 0;
+	string tmp_str;
+	if(cfg->fixed_mem_size > 0){
+		ifstream tmp_file(cfg->cache_file.c_str());
+		while(getline(tmp_file,tmp_str)){
+			trace_line++;
+		}
+		tmp_file.close();
+		//limit_trace_line = 13500·fixed_mem_size - 8888
+		//sampling_P = trace_line / limit_trace_line / unique_ratio
+		cfg->sampling_P = trace_line / (13500 * cfg->fixed_mem_size - 8888) / cfg->unique_ratio * 1.05 + 0.6;
+		cfg->sampling_T = 1;
+
+	}
 
 }
 
@@ -182,7 +202,7 @@ int main(int argc, char* argv[])
 		_time_analysis.add_time("read trace");
 
 		//program begin
-		_time_analysis.set_start_time();
+
 		if (io_trace->alloc_time < cfg->io_trace_start_time) {
 			continue;
 		}
@@ -196,7 +216,7 @@ int main(int argc, char* argv[])
 		string str_cache_addr = to_string(static_cast<long long>(io_trace->cache_addr));
 		uint32_t hash = murmurhash(str_cache_addr.c_str(), (str_cache_addr).length(), 0);
 
-
+		total_trace_cnt++;
 		if (hash % cfg->sampling_P < cfg->sampling_T) {
 			sc->main_operation(io_trace, get_reuse_dis, cfg->cache_size, cfg->sampling_P, cfg->sampling_T);
 		}
@@ -207,8 +227,7 @@ int main(int argc, char* argv[])
 			break;
 		}
 
-		_time_analysis.set_end_time();
-		_time_analysis.add_time("process time");
+		
 	}
 
 
@@ -219,6 +238,11 @@ int main(int argc, char* argv[])
 
 	_time_analysis.print_all_latency();
 
+	string map_size_info = "map_size: " + to_string(static_cast<long long>(sc->get_map_size()));
+	int unique_ratio = total_trace_cnt * cfg->sampling_T / sc->get_map_size() / cfg->sampling_P;
+	LogWrite(1, map_size_info.c_str());
+	string unique_ratio_info = "unique_ratio: 1/" + to_string(static_cast<long long>(unique_ratio));
+	LogWrite(1, unique_ratio_info.c_str());
 	LogWrite(1, "process end~~");
 
 	delete io_trace;
