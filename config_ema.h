@@ -10,6 +10,8 @@ typedef struct Config_ema {
 	int  cache_size;    //KB
 	int  sampling_P;
 	int  sampling_T;
+	int  fixed_mem_size;
+	int  unique_ratio;		// = total_trace / unique_trace
 	long io_trace_start_time;
 	long re_dis_start_time;   //reuse distance begin to be computed
 	long io_trace_end_time;
