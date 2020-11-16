@@ -24,7 +24,9 @@ sampling_P=1
 sampling_T=1  
 io_trace_start_time=2018-10-02 0:0:0  
 re_dis_start_time=2018-10-04 0:0:0  
-io_trace_end_time=2018-10-05 0:0:0  
+io_trace_end_time=2018-10-05 0:0:0
+fixed_mem_size=0
+unique_ratio=36
 
 ### notice  
 Because we need to build the RAR curve, and the time granularity is set to two days, the trace needs to be longer than two days at least.  
