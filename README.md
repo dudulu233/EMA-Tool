@@ -34,7 +34,7 @@ You have to make sure that the "re_dis_start_time" in ema.conf is two days after
   
 EMA-Tool offers two use modes, fixed sampling rate and fixed memory sizes(MB)  
 "fixed_mem_size=0" means mode 1, or means mode 2  
-before you use the mode 2(fixed memory sizes), you have to use mode 1 to get the value of "unique_ratio", which shows the relationship between total trace and unique trace, you can get it from "log" in directory "result" after the run is over.In addition, you can set a very small sampling rate in order to run fast.
+before you use the mode 2(fixed memory sizes), you have to use mode 1 to get the value of "unique_ratio", which shows the relationship between total trace and unique trace, you can get it from "log" in directory "result" after the run is over.In addition, you can set a very small sampling rate(e.g. 0.001) in order to run fast.
 
 ## Usage:
 0` EMA-Tool use standard Linux c++ library, make sure your compiler supports it.  
