@@ -1,5 +1,5 @@
 # EMA-Tool
-open beta version 1.00
+open beta version 1.20
 
 MRC(Miss Ratio Curve) plays an important role in cache locality analysis, which can be achieved by reuse distance distribution. However, obtaining the reuse distance distribution has an O(N ∗ M) complexity, where N is the total number of references in the access sequence and M is number of the unique data blocks of references. Although Recent studies have proposed various ways to decrease the computation complexity to O(N ∗ log(n)) using Search Tree, Scale Tree, Interval Tree. These methods use a balanced tree structure to get a logarithmic search time upon each reference to calculate block reuse distances. More over, SHARDS, further decreases the computation complexity with fixed amount of space. These methods still require considerable time and space overhead for processing billions of cached traces.  
 
